@@ -10,7 +10,7 @@ class Template
         ?>
         <!DOCTYPE html>
         <html>
-        <head>
+        <head><?php self::printGA(); ?>
             <link rel="manifest" href="/manifest.json">
             <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async></script>
             <script>
@@ -52,8 +52,28 @@ class Template
         </head>
         <body class="body-blue">
         <?php
-        self::printGA();
         self::printMenu();
+    }
+
+    static function printHeaderTournament($title) {
+        ?>
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <link rel="manifest" href="/manifest.json">
+            <title><?= EventoQuery::getCurrentEvent()->getTitulo() . ($title ? " - ".$title : "") ?></title>
+            <meta name="viewport" content="width=device-width" />
+            <meta charset="UTF-8" />
+            <meta http-equiv="refresh" content="5" />
+            <link rel="stylesheet/less" type="text/css" href="css/tournament.less">
+            <script src="https://cdn.jsdelivr.net/npm/less" ></script>
+            <link rel="icon" href="img/baja.png" type="image/png">
+            <!--[if IE]>
+            <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+            <![endif]-->
+        </head>
+        <body class="body-blue">
+        <?php
     }
 
     static function printFooter() {
@@ -65,15 +85,13 @@ class Template
 
     static function printGA() {
         ?>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-KBKCF1HW4R"></script>
         <script>
-            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-                    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-            })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
 
-            ga('create', 'UA-92791788-1', 'auto');
-            ga('send', 'pageview');
-
+          gtag('config', 'G-KBKCF1HW4R');
         </script>
         <?php
     }

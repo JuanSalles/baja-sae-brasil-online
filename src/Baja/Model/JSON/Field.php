@@ -85,6 +85,11 @@ class Field
         $this->multiple = $multiple;
     }
 
+    public function setEnumAssoc($options = []) {
+        $this->type = "enum-assoc";
+        $this->options = $options;        
+    }
+
     public function setTime() {
         $this->type = "time";
     }
@@ -110,7 +115,18 @@ class Field
                         <select ' . ($this->multiple ? 'multiple' : '') . ' data-group="' . $this->pass . '" data-xor="' . $this->xor . '" style="width: 100%; font: 12px/12px \'Trebuchet MS\', Arial , Sans-serif; border: 0; margin: 0; padding: 0" name="' . $this->code . ($this->multiple ? '[]' : '') . '" id="' . $this->code . '" ' . ($value !== null ? ($canJudge ? '' : 'disabled') : '') . ' />
                             <option value=""></option>';
                 foreach ($this->options as $o) {
-                    $ret .= '<option value="' . $o . '" ' . (array_search($o, $valArray) !== false ? 'selected' : '') . '>' . $o . '</option>';
+                    $ret .= '<option value="' . $o . '" ' . ((!is_null($value) && array_search($o, $valArray, false) !== false) ? 'selected' : '') . '>' . $o . '</option>';
+                }
+                $ret .= '</select>
+                     </td>';
+                break;
+            case "enum-assoc":
+                $ret .= '<td><label for="' . $this->code . '">' . $this->name . '</label></td>';
+                $ret .= '<td style="width: 120px">
+                        <select value="'.($value?$value:null).'" data-group="' . $this->pass . '" data-xor="' . $this->xor . '" style="width: 100%; font: 12px/12px \'Trebuchet MS\', Arial , Sans-serif; border: 0; margin: 0; padding: 0" name="' . $this->code . '" id="' . $this->code . '" ' . ($value !== null ? ($canJudge ? '' : 'disabled') : '') . ' />
+                            <option value=""></option>';
+                foreach ($this->options as $o) {
+                    $ret .= '<option value="' . $o[1] . '" ' . ((!is_null($value) && $o[1]==$value) ? 'selected' : '') . '>' . $o[0] . '</option>';
                 }
                 $ret .= '</select>
                      </td>';

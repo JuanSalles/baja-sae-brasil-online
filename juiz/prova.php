@@ -5,6 +5,7 @@ use Baja\Model\EventoQuery;
 use Baja\Model\LogQuery;
 use Baja\Model\ProvaQuery;
 use Baja\Site\OneSignalClient;
+use Baja\Session;
 use DateTimeZone;
 
 if (!isset($_REQUEST['id'])) header("Location: index.php");

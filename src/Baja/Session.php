@@ -1,5 +1,5 @@
 <?php
-namespace Baja\Juiz;
+namespace Baja;
 use Baja\Model\User;
 use Baja\Model\UserQuery;
 
@@ -33,6 +33,10 @@ class Session
             if (Session::$_currentUser) return true;
         }
         return false;
+    }
+
+    static function setForcedSession($username) {
+        Session::$_currentUser = UserQuery::create()->findOneByUsername($username);
     }
 
     static function endSession() {

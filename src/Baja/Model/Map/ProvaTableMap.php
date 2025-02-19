@@ -231,6 +231,18 @@ class ProvaTableMap extends TableMap
     1 => ':prova_id',
   ),
 ), 'CASCADE', 'CASCADE', 'Inputs', false);
+        $this->addRelation('Tournament', '\\Baja\\Model\\Tournament', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':evento_id',
+    1 => ':evento_id',
+  ),
+  1 =>
+  array (
+    0 => ':prova_id',
+    1 => ':prova_id',
+  ),
+), 'CASCADE', 'CASCADE', 'Tournaments', false);
     } // buildRelations()
 
     /**
@@ -293,6 +305,7 @@ class ProvaTableMap extends TableMap
         // Invalidate objects in related instance pools,
         // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
         InputTableMap::clearInstancePool();
+        TournamentTableMap::clearInstancePool();
     }
 
     /**

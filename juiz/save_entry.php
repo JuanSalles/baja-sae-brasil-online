@@ -8,6 +8,7 @@ use Baja\Model\InputQuery;
 use Baja\Model\Log;
 use Baja\Model\ProvaQuery;
 use Baja\Site\OneSignalClient;
+use Baja\Session;
 
 if (!isset($_REQUEST['p'])) header("Location: index.php");
 

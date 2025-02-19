@@ -72,6 +72,8 @@ class Prova extends BaseProva
             $f = new Field($i->code, $i->name, $i->pass, $i->xor);
             if ($i->type == "enum") {
                 $f->setEnum($i->options, $i->multiple);
+            } else if ($i->type == "enum-assoc") {
+                $f->setEnumAssoc($i->options, $i->multiple);
             } else if ($i->type == "time") {
                 $f->setTime();
             } else {

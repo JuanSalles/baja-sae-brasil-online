@@ -117,7 +117,7 @@ $html = "<html>
 			</div>	
 			<div style = 'font-size:16px; margin: 0 250px'>
 				Este documento eletrônico dispensa carimbo e assinatura.<br>Sua autenticidade pode ser comprovada acessando a seguinte página: <br>
-				<a href=\"http://certificado.bajasaebrasil.online/c/".$evt."/".$cpf2."\">http://certificado.bajasaebrasil.online/c/".$evt."/".$cpf2."</a>
+				<a href=\"http://certificado.bajasaebrasil.net/c/".$evt."/".$cpf2."\">http://certificado.bajasaebrasil.net/c/".$evt."/".$cpf2."</a>
 			</div>
 		</div>
 	</body>

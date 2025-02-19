@@ -6,6 +6,7 @@ use Baja\Model\ProvaQuery;
 use Baja\Model\User;
 use Baja\Model\UserQuery;
 use Baja\Site\OneSignalClient;
+use Baja\Session;
 
 Session::permissionCheck("admin");
 
@@ -33,6 +34,7 @@ if (@$_REQUEST['act'] == 'spoilers') {
 
 if (@$_REQUEST['act'] == 'push') {
     OneSignalClient::sendMessage(@$_POST['heading'], @$_POST['msg'], "/", @$_POST['filter']);
+    exit();
 }
 
 $users = UserQuery::create()->find();
@@ -153,7 +155,7 @@ echo '</table>';
             <tfoot>
             <tr>
                 <th colspan="2" style="height: 30px">
-                    <input type="submit" name="submit" id="pushSubmit" value="Enviar" disabled />
+                    <input type="submit" name="submit" id="pushSubmit" value="Enviar"/>
                 </th>
             </tr>
             </tfoot>

@@ -8,4 +8,6 @@ ini_set('display_errors', 'On');
 
 require_once(__DIR__ . "/phpbb_login.php");
 
-$_DEV_MODE = $user->data["username"] == "Tiago" || $user->data["username"] == "Filipe" || $user->data["username"] == "jbresolin" || $user->data["username"] == "Gabriel Cunha" || $user->data["username"] == "Lucas13RA";
+$_DEV_MODE = $user->data["username"] == "Tiago" || $user->data["username"] == "jbresolin";
+
+date_default_timezone_set('America/Sao_Paulo');

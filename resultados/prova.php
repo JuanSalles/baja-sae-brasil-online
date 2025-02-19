@@ -9,6 +9,7 @@ use Baja\Model\InputQuery;
 $resultado = ResultadoQuery::create()->filterByEventoId(EventoQuery::getCurrentEvent()->getEventoId())->findPk($_REQUEST['id']);
 if (!$resultado) header("Location: index.php");
 $colunas = (array)$resultado->getColunas()->colunas;
+if (@$resultado->getColunas()->type == "tournament") header("Location: torneio.php?id=".$_REQUEST['id']);
 $pos = @$resultado->getColunas()->pos;
 $filter = @$resultado->getColunas()->filter;
 
@@ -59,17 +60,30 @@ foreach ($vars as $v) {
 $vars = $newVars;
 
 if ($pos) {
-    $cmp = function($a, $b) use ($pos)
-    {
-        if (!array_key_exists($pos, $a)) return 0;
-        $va = floatval(strip_tags($a[$pos]));
-        $vb = floatval(strip_tags($b[$pos]));
-        if ($va == $vb) {
-            return 0;
-        }
-        return ($va > $vb) ? -1 : 1;
-    };
-
+    if (@$resultado->getColunas()->pos_order == 'asc') {
+        $cmp = function($a, $b) use ($pos)
+        {
+            if (!array_key_exists($pos, $a)) return 0;
+            $va = floatval(strip_tags($a[$pos]));
+            $vb = floatval(strip_tags($b[$pos]));
+            if ($va == $vb) {
+                return 0;
+            }
+            return ($va > $vb) ? 1 : -1;
+        };
+    } else {
+        $cmp = function($a, $b) use ($pos)
+        {
+            if (!array_key_exists($pos, $a)) return 0;
+            $va = floatval(strip_tags($a[$pos]));
+            $vb = floatval(strip_tags($b[$pos]));
+            if ($va == $vb) {
+                return 0;
+            }
+            return ($va > $vb) ? -1 : 1;
+        };
+    }
+    
     usort($vars, $cmp);
 
     $i = 0; $j = 0; $last = 9999;

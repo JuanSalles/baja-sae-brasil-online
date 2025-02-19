@@ -2,7 +2,7 @@
 
 namespace Baja\Site;
 
-use Baja\Juiz\Session;
+use Baja\Session;
 
 class OneSignalClient
 {
