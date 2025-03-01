@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<database name="resultados" defaultIdMethod="native" defaultPhpNamingMethod="underscore">
+  <table name="equipe" idMethod="native" phpName="Equipe">
+    <column name="evento_id" phpName="EventoId" type="CHAR" size="4" primaryKey="true" required="true"/>
+    <column name="equipe_id" phpName="EquipeId" type="INTEGER" primaryKey="true" required="true"/>
+    <column name="escola" phpName="Escola" type="VARCHAR" size="100" required="true"/>
+    <column name="escola_curto" phpName="EscolaCurto" type="VARCHAR" size="100"/>
+    <column name="cidade" phpName="Cidade" type="VARCHAR" size="100"/>
+    <column name="equipe" phpName="Equipe" type="VARCHAR" size="100" required="true"/>
+    <column name="equipe_curto" phpName="EquipeCurto" type="VARCHAR" size="100"/>
+    <column name="estado" phpName="Estado" type="CHAR" size="2"/>
+    <column name="presente" phpName="Presente" type="BOOLEAN" size="1" required="true" defaultValue="true"/>
+    <foreign-key foreignTable="evento" name="equipe_evento_id" onDelete="CASCADE" onUpdate="CASCADE">
+      <reference local="evento_id" foreign="evento_id"/>
+    </foreign-key>
+    <index name="equipe_evento_id_idx">
+      <index-column name="evento_id"/>
+    </index>
+    <index name="i_referenced_senha_equipe_id_1">
+      <index-column name="equipe_id"/>
+      <index-column name="evento_id"/>
+    </index>
+    <vendor type="mysql">
+      <parameter name="Engine" value="InnoDB"/>
+    </vendor>
+  </table>
+  <table name="evento" idMethod="native" phpName="Evento">
+    <column name="evento_id" phpName="EventoId" type="CHAR" size="4" primaryKey="true" required="true"/>
+    <column name="titulo" phpName="Titulo" type="VARCHAR" size="100"/>
+    <column name="nome" phpName="Nome" type="VARCHAR" size="120"/>
+    <column name="tipo" phpName="Tipo" type="TINYINT"/>
+    <column name="ano" phpName="Ano" type="INTEGER"/>
+    <column name="menu" phpName="Menu" type="VARCHAR" sqlType="json"/>
+    <column name="ativo" phpName="Ativo" type="BOOLEAN" size="1" required="true" defaultValue="true"/>
+    <column name="finalizado" phpName="Finalizado" type="BOOLEAN" size="1" required="true" defaultValue="false"/>
+    <column name="spoilers" phpName="Spoilers" type="BOOLEAN" size="1" required="true" defaultValue="false"/>
+    <column name="tem_certificado" phpName="TemCertificado" type="BOOLEAN" size="1" required="true" defaultValue="false"/>
+    <column name="presidente" phpName="Presidente" type="VARCHAR" size="45"/>
+    <column name="data" phpName="Data" type="VARCHAR" size="100"/>
+    <column name="mandato_presidente" phpName="MandatoPresidente" type="VARCHAR" size="9"/>
+    <column name="local" phpName="Local" type="VARCHAR" size="120"/>
+    <column name="em_andamento" phpName="EmAndamento" type="BOOLEAN" size="1" required="true" defaultValue="false"/>
+    <vendor type="mysql">
+      <parameter name="Engine" value="InnoDB"/>
+    </vendor>
+  </table>
+  <table name="fila" idMethod="native" phpName="Fila">
+    <column name="evento_id" phpName="EventoId" type="CHAR" size="16" primaryKey="true" required="true"/>
+    <column name="fila_id" phpName="FilaId" type="INTEGER" primaryKey="true" required="true"/>
+    <column name="nome" phpName="Nome" type="VARCHAR" size="45" required="true"/>
+    <column name="status" phpName="Status" type="BOOLEAN" size="1" required="true" defaultValue="false"/>
+    <column name="permite_troca" phpName="PermiteTroca" type="BOOLEAN" size="1" required="true" defaultValue="false"/>
+    <column name="permite_multiplas" phpName="PermiteMultiplas" type="BOOLEAN" size="1" required="true" defaultValue="false"/>
+    <column name="permite_chamada_espera" phpName="PermiteChamadaEspera" type="BOOLEAN" size="1" required="true" defaultValue="true"/>
+    <column name="tempo_espera" phpName="TempoEspera" type="INTEGER"/>
+    <column name="abertura_programada" phpName="AberturaProgramada" type="DATETIME"/>
+    <column name="fechamento_programado" phpName="FechamentoProgramado" type="DATETIME"/>
+    <foreign-key foreignTable="evento" name="fila_evento_id" onDelete="CASCADE" onUpdate="CASCADE">
+      <reference local="evento_id" foreign="evento_id"/>
+    </foreign-key>
+    <vendor type="mysql">
+      <parameter name="Engine" value="InnoDB"/>
+    </vendor>
+  </table>
+  <table name="input" idMethod="native" phpName="Input">
+    <column name="evento_id" phpName="EventoId" type="CHAR" size="4" primaryKey="true" required="true"/>
+    <column name="prova_id" phpName="ProvaId" type="CHAR" size="3" primaryKey="true" required="true"/>
+    <column name="equipe_id" phpName="EquipeId" type="INTEGER" primaryKey="true" required="true"/>
+    <column name="dados" phpName="Dados" type="VARCHAR" sqlType="json"/>
+    <column name="vars" phpName="Vars" type="VARCHAR" sqlType="json"/>
+    <column name="pontos" phpName="Pontos" type="VARCHAR" sqlType="json"/>
+    <foreign-key foreignTable="equipe" name="input_evento_id_equipe_id" onDelete="CASCADE" onUpdate="CASCADE">
+      <reference local="evento_id" foreign="evento_id"/>
+      <reference local="equipe_id" foreign="equipe_id"/>
+    </foreign-key>
+    <index name="input_evento_id_prova_id_idx">
+      <index-column name="evento_id"/>
+      <index-column name="prova_id"/>
+    </index>
+    <index name="input_evento_id_equipe_id_idx">
+      <index-column name="evento_id"/>
+      <index-column name="equipe_id"/>
+    </index>
+    <vendor type="mysql">
+      <parameter name="Engine" value="InnoDB"/>
+    </vendor>
+  </table>
+  <table name="log" idMethod="native" phpName="Log">
+    <column name="id" phpName="Id" type="BIGINT" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="user" phpName="User" type="VARCHAR" size="45"/>
+    <column name="pagina" phpName="Pagina" type="VARCHAR" size="8"/>
+    <column name="equipe" phpName="Equipe" type="INTEGER"/>
+    <column name="dados" phpName="Dados" type="LONGVARCHAR"/>
+    <column name="data" phpName="Data" type="TIMESTAMP" defaultExpr="CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"/>
+    <vendor type="mysql">
+      <parameter name="Engine" value="InnoDB"/>
+    </vendor>
+  </table>
+  <table name="participantes" idMethod="native" phpName="Participantes">
+    <column name="idparticipantes" phpName="Idparticipantes" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="nome" phpName="Nome" type="VARCHAR" size="300"/>
+    <column name="funcao" phpName="Funcao" type="VARCHAR" size="45"/>
+    <column name="cpf" phpName="Cpf" type="BIGINT"/>
+    <column name="evento" phpName="Evento" type="CHAR" size="4" primaryKey="true" required="true"/>
+    <foreign-key foreignTable="evento" name="participantes_evento_id" onDelete="CASCADE" onUpdate="CASCADE">
+      <reference local="evento" foreign="evento_id"/>
+    </foreign-key>
+    <index name="participantes_evento_id_idx">
+      <index-column name="evento"/>
+    </index>
+    <vendor type="mysql">
+      <parameter name="Engine" value="InnoDB"/>
+    </vendor>
+  </table>
+</database>

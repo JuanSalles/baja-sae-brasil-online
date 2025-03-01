@@ -123,6 +123,7 @@
     <column name="tempo" phpName="Tempo" type="INTEGER" size="14"/>
     <column name="modificado" phpName="Modificado" type="TIMESTAMP" defaultExpr="CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP" />
     <column name="params" phpName="Params" type="LONGVARCHAR" sqlType="json" />
+    <column name="params_backup" phpName="ParamsBackup" type="LONGVARCHAR" sqlType="json" />
     <column name="totals" phpName="Totals" type="LONGVARCHAR" sqlType="json" />
     <foreign-key foreignTable="evento" name="prova_evento_id" onDelete="CASCADE" onUpdate="CASCADE">
       <reference local="evento_id" foreign="evento_id"/>
@@ -140,6 +141,7 @@
     <column name="nome" phpName="Nome" type="VARCHAR" size="45" required="true"/>
     <column name="inputs" phpName="Inputs" type="ARRAY" />
     <column name="colunas" phpName="Colunas" type="LONGVARCHAR" sqlType="json" />
+    <column name="colunas_backup" phpName="ColunasBackup" type="LONGVARCHAR" sqlType="json" />
     <foreign-key foreignTable="evento" name="resultado_evento_id" onDelete="CASCADE" onUpdate="CASCADE">
       <reference local="evento_id" foreign="evento_id"/>
     </foreign-key>
