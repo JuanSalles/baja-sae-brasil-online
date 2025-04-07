@@ -3,13 +3,13 @@ namespace Baja\Juiz;
 
 use Baja\Model\EventoQuery;
 use Baja\Model\LogQuery;
-use Baja\Model\ProvaQuery;
-use Baja\Model\Prova;
+use Baja\Model\ResultadoQuery;
+use Baja\Model\Resultado;
 use Baja\Site\OneSignalClient;
 use Baja\Session;
 use DateTimeZone;
 
-if (!isset($_REQUEST['id']) && !isset($_REQUEST['nova'])) header("Location: admin_provas.php");
+if (!isset($_REQUEST['id']) && !isset($_REQUEST['novo'])) header("Location: admin_resultados.php");
 
 $_page = $_REQUEST['id'];
 
@@ -17,40 +17,36 @@ Session::permissionCheck('admin');
 
 $currentEventId = EventoQuery::getCurrentEvent()->getEventoId();
 
-$nova = false;
+$novo = false;
 
-if (isset($_REQUEST['nova']) && $_REQUEST['nova']=='true') {
-    $nova = true;
+if (isset($_REQUEST['novo']) && $_REQUEST['novo']=='true') {
+    $novo = true;
 
     if (@$_REQUEST['act'] == 'Salvar') {
-        if (!isset($_POST['prova_id']) || !isset($_POST['nome']) || !isset($_POST['params']) || $_POST['prova_id'] == '' || $_POST['nome'] == '' || $_POST['params'] == '') {
-            header("Location: prova.php?nova=true");
+        if (!isset($_POST['resultado_id']) || !isset($_POST['nome']) || !isset($_POST['inputs']) || !isset($_POST['colunas']) || $_POST['resultado_id'] == '' || $_POST['nome'] == '' || $_POST['inputs'] == '' || $_POST['colunas'] == '') {
+            header("Location: resultado.php?novo=true");
         } else {
-            $prova = ProvaQuery::create()->filterByEventoId($currentEventId)->findOneByProvaId($_POST['prova_id']);
-            if ($prova) header("Location: prova.php?id=".$_POST['prova_id']);
+            $resultado = ResultadoQuery::create()->filterByEventoId($currentEventId)->findOneByResultadoId($_POST['resultado_id']);
+            if ($resultado) header("Location: resultado.php?id=".$_POST['resultado_id']);
 
-            $prova = new Prova();
-            $prova->setEventoId($currentEventId);
-            $prova->setProvaId($_POST['prova_id']);
-            $prova->setNome($_POST['nome']);
-            $prova->setParams(json_decode($_POST['params']));
-            $prova->save();
+            $resultado = new Resultado();
+            $resultado->setEventoId($currentEventId);
+            $resultado->setResultadoId($_POST['resultado_id']);
+            $resultado->setNome($_POST['nome']);
+            $resultado->setInputs(explode(",",str_replace(" ","",$_POST['inputs'])));
+            $resultado->setColunas(json_decode($_POST['colunas']));
+            $resultado->save();
 
-            header("Location: admin_provas.php");
+            header("Location: admin_resultados.php");
         }
     }
 
 } else {
 
-    $prova = ProvaQuery::create()->filterByEventoId($currentEventId)->findOneByProvaId($_page);
-    if (!$prova) header("Location: admin_provas.php");
+    $resultado = ResultadoQuery::create()->filterByEventoId($currentEventId)->findOneByResultadoId($_page);
+    if (!$resultado) header("Location: admin_resultados.php");
 
-    $backups = json_decode($prova->getParamsBackup(), true);
-
-    if (@$_REQUEST['act'] == 'Refresh Pontos') {
-        $prova->refreshVarsAndPontos();
-        header("Location: prova.php?id=".$_page);
-    }
+    $backups = json_decode($resultado->getColunasBackup(), true);
 
     $bkNomeados = [];
 
@@ -65,19 +61,19 @@ if (isset($_REQUEST['nova']) && $_REQUEST['nova']=='true') {
     if (@$_REQUEST['act'] == '❌') {
         if (isset($_POST['nomeado']) && $_POST['nomeado'] != '' && isset($bkNomeados[$_POST['nomeado']])) {
             unset($backups[$_POST['nomeado']]);
-            $prova->setParamsBackup(json_encode($backups));
-            $prova->save();
+            $resultado->setColunasBackup(json_encode($backups));
+            $resultado->save();
         }
-        header("Location: prova.php?id=".$_page);
+        header("Location: resultado.php?id=".$_page);
     }
 
     if (@$_REQUEST['act'] == '💾') {
-        if (isset($_POST['params']) && $_POST['params'] != '' && isset($_POST['novoNomeadoNome']) && $_POST['novoNomeadoNome'] != '') {
-            $backups[$_POST['novoNomeadoNome']] = json_decode($_POST['params']);
-            $prova->setParamsBackup(json_encode($backups));
-            $prova->save();
+        if (isset($_POST['colunas']) && $_POST['colunas'] != '' && isset($_POST['novoNomeadoNome']) && $_POST['novoNomeadoNome'] != '') {
+            $backups[$_POST['novoNomeadoNome']] = json_decode($_POST['colunas']);
+            $resultado->setColunasBackup(json_encode($backups));
+            $resultado->save();
         }
-        header("Location: prova.php?id=".$_page);
+        header("Location: resultado.php?id=".$_page);
     }
 
     $bk1 = $backups['-1'];
@@ -87,48 +83,45 @@ if (isset($_REQUEST['nova']) && $_REQUEST['nova']=='true') {
     $bk5 = $backups['-5'];
 
     if (@$_REQUEST['act'] == 'Atualizar') {
-        if ($prova->getParams() != json_decode($_POST['params'])) {
+        if ($resultado->getColunas() != json_decode($_POST['colunas'])) {
             $backups['-5'] = $bk4;        
             $backups['-4'] = $bk3;
             $backups['-3'] = $bk2;
             $backups['-2'] = $bk1;
-            $backups['-1'] = $prova->getParams();
-            $prova->setParamsBackup(json_encode($backups));
+            $backups['-1'] = $resultado->getColunas();
+            $resultado->setColunasBackup(json_encode($backups));
         }
-        $prova->setNome($_POST['nome']);
-        $prova->setParams(json_decode($_POST['params']));
-        $prova->save();
+        $resultado->setNome($_POST['nome']);
+        $resultado->setInputs(explode(",",str_replace(" ","",$_POST['inputs'])));
+        $resultado->setColunas(json_decode($_POST['colunas']));
+        $resultado->save();
 
-        if (isset($_POST['refresh']) && $_POST['refresh']=='1') {
-            $prova->refreshVarsAndPontos();
-        }
-
-        header("Location: prova.php?id=".$_page);
+        header("Location: resultado.php?id=".$_page);
     }
 
-    if (@$_REQUEST['act'] == 'Deletar Prova') {
-        $prova->delete();
-        header("Location: admin_provas.php");
+    if (@$_REQUEST['act'] == 'Deletar Resultado') {
+        $resultado->delete();
+        header("Location: admin_resultados.php");
     }
 }
 
-Template::printHeader("Detalhes de Prova", false);
+Template::printHeader("Detalhes de Resultado", false);
 
 
 
 ?>
 <div style="max-width: 1000px; margin: 0 auto; height:100vh;">
-<?php if ($nova) { ?>
-    <form action="prova.php?nova=true" method="POST">
+<?php if ($novo) { ?>
+    <form action="resultado.php?novo=true" method="POST">
 <?php } else { ?>
-    <form action="prova.php?id=<?= $prova->getProvaId() ?>" method="POST">
-<?php } ?>
+    <form action="resultado.php?id=<?= $resultado->getResultadoId() ?>" method="POST">
+<?php } ?>    
         <table id="myTable" class="tablesorter" style="margin-bottom: 0;">
             <thead>
                 <tr style="height: 50px">
                     <th colspan="2" style="vertical-align: middle;" class="sorter-false">
-                        <span style="float:left"><a href="admin_provas.php" style="color: white; font-size: 12px;">&nbsp;Voltar</a></span>
-                        <span style="font-size: 28px;"><?= $nova?'Nova Prova':$prova->getNome() ?></span> <br />
+                        <span style="float:left"><a href="admin_resultados.php" style="color: white; font-size: 12px;">&nbsp;Voltar</a></span>
+                        <span style="font-size: 28px;"><?= $novo?'Novo Resultado':$resultado->getNome(); ?></span> <br />
                     </th>
                 </tr>
             </thead>
@@ -138,17 +131,21 @@ Template::printHeader("Detalhes de Prova", false);
                     <td><input style="width:700px;" type="text" name="evento_id" disabled value="<?= $currentEventId ?>"/></td>
                 </tr>
                 <tr>
-                    <td>ID Prova</td>
-                    <td><input style="width:700px;" type="text" name="prova_id" <?= $nova?'':'disabled' ?> value="<?= $nova?'':$prova->getProvaId() ?>" /></td>
+                    <td>ID Resultado</td>
+                    <td><input style="width:700px;" type="text" name="resultado_id" <?= $novo?'':'disabled' ?> value="<?= $novo?'':$resultado->getResultadoId() ?>" /></td>
                 </tr>
                 <tr>
-                    <td>Nome Prova</td>
-                    <td><input style="width:700px;" type="text" name="nome" value="<?= $nova?'':$prova->getNome() ?>" /></td>
+                    <td>Título Resultado</td>
+                    <td><input style="width:700px;" type="text" name="nome" value="<?= $novo?'':$resultado->getNome() ?>" /></td>
                 </tr>
                 <tr>
-                    <td rowspan="2">Parâmetros</td>
+                    <td>Inputs</td>
+                    <td><input style="width:700px;" type="text" name="inputs" value="<?= $novo?'':implode(", ",$resultado->getInputs()) ?>" /></td>
+                </tr>
+                <tr>
+                    <td rowspan="2">Colunas</td>
                     <td>
-                        <?php if (!$nova) { ?>
+                        <?php if (!$novo) { ?>
                         <button type="button" class="bkBotao bkSelected" id="bkAtual" onclick="restoreAtual()">Código Atual</button><br/><br/>
                         
                         <strong>Backups Últimas Alterações:</strong>
@@ -176,32 +173,23 @@ Template::printHeader("Detalhes de Prova", false);
                         <input type="submit" name="act" value="💾" id="salvaNovoNomeado" disabled/>
                         <?php } ?>
                     </td>
-                </tr>                
-                <tr>
-                    <td><textarea style="width:700px;min-height:600px;" name="params" id="params" <?= $nova?'':'oninput="resetStyles();"' ?>><?= $nova?'':json_encode($prova->getParams(), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?></textarea></td>
-                </tr>                
-                <?php if (!$nova) { ?>
-                <tr>
-                    <td>Totais</td>
-                    <td><textarea style="width:700px;min-height:200px;" disabled><?= json_encode($prova->getTotals(), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?></textarea></td>
                 </tr>
-                <?php } ?>
+                <tr>
+                <td><textarea style="width:700px;min-height:600px;" name="colunas" id="colunas" <?= $nova?'':'oninput="resetStyles();"' ?>><?= $novo?'':json_encode($resultado->getColunas(), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?></textarea></td>
+                </tr>
             </tbody>
             <tfoot>
-                <?php if (!$nova) { ?>
+                <?php if (!$novo) { ?>
                 <tr>
-                    <td colspan="2"><input type="checkbox" checked name="refresh" value="1">Refresh Pontos ao salvar</input></td>
-                </tr>                
-                <tr>
-                    <th style="height: 30px;" colspan="2"><input type="submit" name="act" value="Atualizar" />&nbsp;&nbsp;<input type="submit" name="act" value="Refresh Pontos" /></th>
+                    <th style="height: 30px;" colspan="2"><input type="submit" name="act" value="Atualizar" />
                 </tr>
                 <tr >
                     <th style="height: 100px;" colspan="2">
-                        <input id="deleteBtn" type="button" value="Deletar Prova" onclick="confirmDelete();"/>
+                        <input id="deleteBtn" type="button" value="Deletar Resultado" onclick="confirmDelete();"/>
                         <div id="deleteConfirmBtn" style="display:none">
-                            <strong>Tem certeza que deseja apagar a prova? Essa operação não pode ser desfeita.</strong><br/><br/>
-                            <input type="submit" name="act" value="Deletar Prova" style="background:red;color:white;"/>&nbsp;&nbsp;&nbsp;&nbsp;<input type="button" value="Cancelar" onclick="cancelDelete();"/>
-                            </div>
+                            <strong>Tem certeza que deseja apagar o resultado? Essa operação não pode ser desfeita.</strong><br/><br/>
+                            <input type="submit" name="act" value="Deletar Resultado" style="background:red;color:white;"/>&nbsp;&nbsp;&nbsp;&nbsp;<input type="button" value="Cancelar" onclick="cancelDelete();"/>
+                        </div>
                     </th>
                 </tr>
                 <?php } else { ?>
@@ -214,10 +202,10 @@ Template::printHeader("Detalhes de Prova", false);
     </form>
 
     <script type="text/javascript">
-        const atual = <?= $nova?'[]':json_encode($prova->getParams()) ?>;
-        const backs = <?= (!$nova && $prova->getParamsBackup())?$prova->getParamsBackup():'{}' ?>;
+        const atual = <?= $novo?'[]':json_encode($resultado->getColunas()) ?>;
+        const backs = <?= (!$novo && $resultado->getColunasBackup())?$resultado->getColunasBackup():'{}' ?>;
 
-        const paramsEl = document.getElementById("params");
+        const colunasEl = document.getElementById("colunas");
         const selectEl = document.getElementById("nomeado");
 
         const novoNomeadoNome = document.getElementById("novoNomeadoNome");
@@ -237,7 +225,7 @@ Template::printHeader("Detalhes de Prova", false);
         function loadNumbered(i) {
             if (backs[i]) {
                 resetStyles()
-                paramsEl.value = JSON.stringify(backs[i], null, 2);           
+                colunasEl.value = JSON.stringify(backs[i], null, 2);           
                 document.getElementById('bk'+i).classList.add('bkSelected');                
             }
         }
@@ -246,7 +234,7 @@ Template::printHeader("Detalhes de Prova", false);
             try {
                 if (backs[selectEl.value]) {
                     resetStyles()
-                    paramsEl.value = JSON.stringify(backs[selectEl.value], null, 2);
+                    colunasEl.value = JSON.stringify(backs[selectEl.value], null, 2);
                     selectEl.classList.add('bkSelected');
                 }                
             } catch (e) {
@@ -256,7 +244,7 @@ Template::printHeader("Detalhes de Prova", false);
 
         function restoreAtual() {
             resetStyles()
-            paramsEl.value = JSON.stringify(atual, null, 2);
+            colunasEl.value = JSON.stringify(atual, null, 2);
             document.getElementById("bkAtual").classList.add('bkSelected');
         }
 

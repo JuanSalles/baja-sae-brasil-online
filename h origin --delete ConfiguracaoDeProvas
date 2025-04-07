@@ -1,0 +1,35 @@
+* [33m216ee02[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mfeature/ConfiguracaoDeProvas[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/feature/ConfiguracaoDeProvas[m[33m, [m[1;31morigin/dev[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;31morigin/ConfiguracaoDeProvas[m[33m, [m[1;32mmaster[m[33m, [m[1;32mdev[m[33m)[m Patch de atualizações não versionadas anteriomente
+* [33ma88f577[m Update default event
+* [33md2fdee5[m Update certificate background
+* [33m576f216[m Remove event restriction on remote.php
+* [33mfb4b510[m Add certificados to git
+* [33m81c9c05[m Single bootstrap
+* [33m4e32187[m Add default/hub placeholder
+* [33m58c8ce1[m Move resultados into its own site
+* [33m2a8cd97[m Remove relatorio references
+* [33mfeae15e[m Update all dependencies
+* [33m369d97a[m Protect reCAPTCHA key
+* [33m9700e40[m Sync db with schema.xml
+* [33m97de0bb[m Bump phpmailer/phpmailer from 5.2.26 to 6.1.6
+* [33mec2919d[m 2020 sync
+* [33mc73f1c5[m Add maps and enduro dump helpers.
+* [33m484204b[m Add support to rolling entries provas.
+* [33m1f3567e[m Fix .htaccess.
+* [33m6e17d6f[m Allow object maps when configuring events menu.
+* [33ma229eec[m Fix OneSignal auth.
+* [33m46b8469[m Fix type cast issue.
+* [33m2fbdf84[m Add 19BR.
+* [33m54def2f[m Fix some sorting issue.
+* [33m2691203[m Add refresh formulas button on admin page.
+* [33md23f99e[m Fix sorting function to account for nulls.
+* [33m7588a7a[m Allow pontos to be used as vars (alphabetical order is enforced).
+* [33m7291a4c[m Add CORS support to remote.php.
+* [33ma8e98f3[m Add delete button. Port remote API to new system. Other minor fixes.
+* [33mbed20a5[m Remove legacy files.
+* [33mfd90617[m Update provas.php to use the new system.
+* [33ma95b316[m Add 18SU and 18NE.
+* [33mc99ea71[m Remove legacy column.
+* [33m29b71dd[m Update README.md
+* [33mc5cd55a[m Create README.md
+* [33mc229d81[m Initial commit.
+* [33mea45b20[m Initial commit

@@ -123,6 +123,13 @@ abstract class Prova implements ActiveRecordInterface
     protected $params;
 
     /**
+     * The value for the params_backup field.
+     *
+     * @var        string
+     */
+    protected $params_backup;
+
+    /**
      * The value for the totals field.
      *
      * @var        string
@@ -494,6 +501,16 @@ abstract class Prova implements ActiveRecordInterface
     }
 
     /**
+     * Get the [params_backup] column value.
+     *
+     * @return string
+     */
+    public function getParamsBackup()
+    {
+        return $this->params_backup;
+    }
+
+    /**
      * Get the [totals] column value.
      *
      * @return string
@@ -653,6 +670,26 @@ abstract class Prova implements ActiveRecordInterface
     } // setParams()
 
     /**
+     * Set the value of [params_backup] column.
+     *
+     * @param string|null $v New value
+     * @return $this|\Baja\Model\Prova The current object (for fluent API support)
+     */
+    public function setParamsBackup($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->params_backup !== $v) {
+            $this->params_backup = $v;
+            $this->modifiedColumns[ProvaTableMap::COL_PARAMS_BACKUP] = true;
+        }
+
+        return $this;
+    } // setParamsBackup()
+
+    /**
      * Set the value of [totals] column.
      *
      * @param string|null $v New value
@@ -736,7 +773,10 @@ abstract class Prova implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : ProvaTableMap::translateFieldName('Params', TableMap::TYPE_PHPNAME, $indexType)];
             $this->params = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : ProvaTableMap::translateFieldName('Totals', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : ProvaTableMap::translateFieldName('ParamsBackup', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->params_backup = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : ProvaTableMap::translateFieldName('Totals', TableMap::TYPE_PHPNAME, $indexType)];
             $this->totals = (null !== $col) ? (string) $col : null;
             $this->resetModified();
 
@@ -746,7 +786,7 @@ abstract class Prova implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 8; // 8 = ProvaTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 9; // 9 = ProvaTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\Baja\\Model\\Prova'), 0, $e);
@@ -1018,6 +1058,9 @@ abstract class Prova implements ActiveRecordInterface
         if ($this->isColumnModified(ProvaTableMap::COL_PARAMS)) {
             $modifiedColumns[':p' . $index++]  = 'params';
         }
+        if ($this->isColumnModified(ProvaTableMap::COL_PARAMS_BACKUP)) {
+            $modifiedColumns[':p' . $index++]  = 'params_backup';
+        }
         if ($this->isColumnModified(ProvaTableMap::COL_TOTALS)) {
             $modifiedColumns[':p' . $index++]  = 'totals';
         }
@@ -1052,6 +1095,9 @@ abstract class Prova implements ActiveRecordInterface
                         break;
                     case 'params':
                         $stmt->bindValue($identifier, $this->params, PDO::PARAM_STR);
+                        break;
+                    case 'params_backup':
+                        $stmt->bindValue($identifier, $this->params_backup, PDO::PARAM_STR);
                         break;
                     case 'totals':
                         $stmt->bindValue($identifier, $this->totals, PDO::PARAM_STR);
@@ -1133,6 +1179,9 @@ abstract class Prova implements ActiveRecordInterface
                 return $this->getParams();
                 break;
             case 7:
+                return $this->getParamsBackup();
+                break;
+            case 8:
                 return $this->getTotals();
                 break;
             default:
@@ -1172,7 +1221,8 @@ abstract class Prova implements ActiveRecordInterface
             $keys[4] => $this->getTempo(),
             $keys[5] => $this->getModificado(),
             $keys[6] => $this->getParams(),
-            $keys[7] => $this->getTotals(),
+            $keys[7] => $this->getParamsBackup(),
+            $keys[8] => $this->getTotals(),
         );
         if ($result[$keys[5]] instanceof \DateTimeInterface) {
             $result[$keys[5]] = $result[$keys[5]]->format('c');
@@ -1289,6 +1339,9 @@ abstract class Prova implements ActiveRecordInterface
                 $this->setParams($value);
                 break;
             case 7:
+                $this->setParamsBackup($value);
+                break;
+            case 8:
                 $this->setTotals($value);
                 break;
         } // switch()
@@ -1339,7 +1392,10 @@ abstract class Prova implements ActiveRecordInterface
             $this->setParams($arr[$keys[6]]);
         }
         if (array_key_exists($keys[7], $arr)) {
-            $this->setTotals($arr[$keys[7]]);
+            $this->setParamsBackup($arr[$keys[7]]);
+        }
+        if (array_key_exists($keys[8], $arr)) {
+            $this->setTotals($arr[$keys[8]]);
         }
     }
 
@@ -1402,6 +1458,9 @@ abstract class Prova implements ActiveRecordInterface
         }
         if ($this->isColumnModified(ProvaTableMap::COL_PARAMS)) {
             $criteria->add(ProvaTableMap::COL_PARAMS, $this->params);
+        }
+        if ($this->isColumnModified(ProvaTableMap::COL_PARAMS_BACKUP)) {
+            $criteria->add(ProvaTableMap::COL_PARAMS_BACKUP, $this->params_backup);
         }
         if ($this->isColumnModified(ProvaTableMap::COL_TOTALS)) {
             $criteria->add(ProvaTableMap::COL_TOTALS, $this->totals);
@@ -1514,6 +1573,7 @@ abstract class Prova implements ActiveRecordInterface
         $copyObj->setTempo($this->getTempo());
         $copyObj->setModificado($this->getModificado());
         $copyObj->setParams($this->getParams());
+        $copyObj->setParamsBackup($this->getParamsBackup());
         $copyObj->setTotals($this->getTotals());
 
         if ($deepCopy) {
@@ -2175,6 +2235,7 @@ abstract class Prova implements ActiveRecordInterface
         $this->tempo = null;
         $this->modificado = null;
         $this->params = null;
+        $this->params_backup = null;
         $this->totals = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();

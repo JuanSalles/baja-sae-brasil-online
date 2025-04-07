@@ -87,3 +87,4 @@ propel.yaml
 */*.prod.*
 forum/*
 .idea/*
+generated-conf/config.php
