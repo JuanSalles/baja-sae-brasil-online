@@ -22,6 +22,8 @@ class Field
     private $multiple;
     /** @var  string[] */
     private $options;
+    /** @var  bool */
+    private $sensitive;
 
     /**
      * @return string
@@ -55,6 +57,14 @@ class Field
         return $this->type;
     }
 
+    /**
+     * @return bool
+     */
+    public function getSensitive()
+    {
+        return $this->sensitive;
+    }
+
 
     /**
      * Campo constructor.
@@ -63,13 +73,14 @@ class Field
      * @param string $pass
      * @param string $xor
      */
-    public function __construct($code, $name, $pass = '1', $xor = 'X')
+    public function __construct($code, $name, $pass = '1', $xor = 'X', $sensitive = false)
     {
         $this->type = "hidden";
         $this->name = $name;
         $this->code = $code;
         $this->pass = $pass === null ? '1' : $pass;
         $this->xor = $xor === null ? 'X' : $xor;
+        $this->sensitive = $sensitive;
     }
 
     public function setNumber($precision = 0, $negative = false)

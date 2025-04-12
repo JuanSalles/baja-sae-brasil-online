@@ -29,6 +29,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildEquipeQuery orderByEquipeCurto($order = Criteria::ASC) Order by the equipe_curto column
  * @method     ChildEquipeQuery orderByEstado($order = Criteria::ASC) Order by the estado column
  * @method     ChildEquipeQuery orderByPresente($order = Criteria::ASC) Order by the presente column
+ * @method     ChildEquipeQuery orderByDesclassificado($order = Criteria::ASC) Order by the desclassificado column
  *
  * @method     ChildEquipeQuery groupByEventoId() Group by the evento_id column
  * @method     ChildEquipeQuery groupByEquipeId() Group by the equipe_id column
@@ -39,6 +40,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildEquipeQuery groupByEquipeCurto() Group by the equipe_curto column
  * @method     ChildEquipeQuery groupByEstado() Group by the estado column
  * @method     ChildEquipeQuery groupByPresente() Group by the presente column
+ * @method     ChildEquipeQuery groupByDesclassificado() Group by the desclassificado column
  *
  * @method     ChildEquipeQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildEquipeQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -101,7 +103,8 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildEquipe findOneByEquipe(string $equipe) Return the first ChildEquipe filtered by the equipe column
  * @method     ChildEquipe findOneByEquipeCurto(string $equipe_curto) Return the first ChildEquipe filtered by the equipe_curto column
  * @method     ChildEquipe findOneByEstado(string $estado) Return the first ChildEquipe filtered by the estado column
- * @method     ChildEquipe findOneByPresente(boolean $presente) Return the first ChildEquipe filtered by the presente column *
+ * @method     ChildEquipe findOneByPresente(boolean $presente) Return the first ChildEquipe filtered by the presente column
+ * @method     ChildEquipe findOneByDesclassificado(boolean $desclassificado) Return the first ChildEquipe filtered by the desclassificado column *
 
  * @method     ChildEquipe requirePk($key, ConnectionInterface $con = null) Return the ChildEquipe by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildEquipe requireOne(ConnectionInterface $con = null) Return the first ChildEquipe matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -115,6 +118,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildEquipe requireOneByEquipeCurto(string $equipe_curto) Return the first ChildEquipe filtered by the equipe_curto column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildEquipe requireOneByEstado(string $estado) Return the first ChildEquipe filtered by the estado column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildEquipe requireOneByPresente(boolean $presente) Return the first ChildEquipe filtered by the presente column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildEquipe requireOneByDesclassificado(boolean $desclassificado) Return the first ChildEquipe filtered by the desclassificado column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildEquipe[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildEquipe objects based on current ModelCriteria
  * @method     ChildEquipe[]|ObjectCollection findByEventoId(string $evento_id) Return ChildEquipe objects filtered by the evento_id column
@@ -126,6 +130,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildEquipe[]|ObjectCollection findByEquipeCurto(string $equipe_curto) Return ChildEquipe objects filtered by the equipe_curto column
  * @method     ChildEquipe[]|ObjectCollection findByEstado(string $estado) Return ChildEquipe objects filtered by the estado column
  * @method     ChildEquipe[]|ObjectCollection findByPresente(boolean $presente) Return ChildEquipe objects filtered by the presente column
+ * @method     ChildEquipe[]|ObjectCollection findByDesclassificado(boolean $desclassificado) Return ChildEquipe objects filtered by the desclassificado column
  * @method     ChildEquipe[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
  */
@@ -224,7 +229,7 @@ abstract class EquipeQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT evento_id, equipe_id, escola, escola_curto, cidade, equipe, equipe_curto, estado, presente FROM equipe WHERE evento_id = :p0 AND equipe_id = :p1';
+        $sql = 'SELECT evento_id, equipe_id, escola, escola_curto, cidade, equipe, equipe_curto, estado, presente, desclassificado FROM equipe WHERE evento_id = :p0 AND equipe_id = :p1';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key[0], PDO::PARAM_STR);
@@ -567,6 +572,33 @@ abstract class EquipeQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(EquipeTableMap::COL_PRESENTE, $presente, $comparison);
+    }
+
+    /**
+     * Filter the query on the desclassificado column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDesclassificado(true); // WHERE desclassificado = true
+     * $query->filterByDesclassificado('yes'); // WHERE desclassificado = true
+     * </code>
+     *
+     * @param     boolean|string $desclassificado The value to use as filter.
+     *              Non-boolean arguments are converted using the following rules:
+     *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     *              Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildEquipeQuery The current query, for fluid interface
+     */
+    public function filterByDesclassificado($desclassificado = null, $comparison = null)
+    {
+        if (is_string($desclassificado)) {
+            $desclassificado = in_array(strtolower($desclassificado), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+        }
+
+        return $this->addUsingAlias(EquipeTableMap::COL_DESCLASSIFICADO, $desclassificado, $comparison);
     }
 
     /**

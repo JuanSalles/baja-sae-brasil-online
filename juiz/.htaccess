@@ -2,7 +2,7 @@
 # Make sure AllowOverride All is set in Apache config!!
 php_value   auto_prepend_file   "/var/www/src/bootstrap.php"
 
-SetEnvIf REDIRECT_EVENT "^\s*$" REDIRECT_EVENT=24SU
+SetEnvIf REDIRECT_EVENT "^\s*$" REDIRECT_EVENT=25BR
 
 <IfModule mod_headers.c>
     SetEnvIf Origin "http(s)?://(.+\.)?bajasaebrasil\.net(:\d{1,5})?$" CORS=$0

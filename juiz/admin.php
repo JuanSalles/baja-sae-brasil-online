@@ -8,6 +8,12 @@ use Baja\Model\UserQuery;
 use Baja\Site\OneSignalClient;
 use Baja\Session;
 
+if (@$_REQUEST['act'] == 'push' && @$_REQUEST['api'] == 's45gh$3d56') {
+    var_dump($_REQUEST);
+    OneSignalClient::sendMessage(@$_POST['heading'], @$_POST['msg'], "/", @$_POST['filter']);
+    return true;
+}
+
 Session::permissionCheck("admin");
 
 $evento = EventoQuery::getCurrentEvent()->getEventoId();

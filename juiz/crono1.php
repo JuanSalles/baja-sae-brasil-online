@@ -80,7 +80,8 @@
     }
   ]
 
-  const sequencia = [0,1,2,3,4,0,1,2,3,4,0,1,2,3,5]
+  //const sequencia = [0,1,2,3,4,0,1,2,3,4,0,1,2,3,5]
+  const sequencia = [0,1,2,3,4,0,1,2,3,5]
 
   function setUITImerAtivo(id){
     const allUITimers = document.querySelectorAll("div.timer")
