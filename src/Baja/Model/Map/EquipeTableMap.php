@@ -58,7 +58,7 @@ class EquipeTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 9;
+    const NUM_COLUMNS = 10;
 
     /**
      * The number of lazy-loaded columns
@@ -68,7 +68,7 @@ class EquipeTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 9;
+    const NUM_HYDRATE_COLUMNS = 10;
 
     /**
      * the column name for the evento_id field
@@ -116,6 +116,11 @@ class EquipeTableMap extends TableMap
     const COL_PRESENTE = 'equipe.presente';
 
     /**
+     * the column name for the desclassificado field
+     */
+    const COL_DESCLASSIFICADO = 'equipe.desclassificado';
+
+    /**
      * The default string format for model objects of the related table
      */
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -127,11 +132,11 @@ class EquipeTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('EventoId', 'EquipeId', 'Escola', 'EscolaCurto', 'Cidade', 'Equipe', 'EquipeCurto', 'Estado', 'Presente', ),
-        self::TYPE_CAMELNAME     => array('eventoId', 'equipeId', 'escola', 'escolaCurto', 'cidade', 'equipe', 'equipeCurto', 'estado', 'presente', ),
-        self::TYPE_COLNAME       => array(EquipeTableMap::COL_EVENTO_ID, EquipeTableMap::COL_EQUIPE_ID, EquipeTableMap::COL_ESCOLA, EquipeTableMap::COL_ESCOLA_CURTO, EquipeTableMap::COL_CIDADE, EquipeTableMap::COL_EQUIPE, EquipeTableMap::COL_EQUIPE_CURTO, EquipeTableMap::COL_ESTADO, EquipeTableMap::COL_PRESENTE, ),
-        self::TYPE_FIELDNAME     => array('evento_id', 'equipe_id', 'escola', 'escola_curto', 'cidade', 'equipe', 'equipe_curto', 'estado', 'presente', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, )
+        self::TYPE_PHPNAME       => array('EventoId', 'EquipeId', 'Escola', 'EscolaCurto', 'Cidade', 'Equipe', 'EquipeCurto', 'Estado', 'Presente', 'Desclassificado', ),
+        self::TYPE_CAMELNAME     => array('eventoId', 'equipeId', 'escola', 'escolaCurto', 'cidade', 'equipe', 'equipeCurto', 'estado', 'presente', 'desclassificado', ),
+        self::TYPE_COLNAME       => array(EquipeTableMap::COL_EVENTO_ID, EquipeTableMap::COL_EQUIPE_ID, EquipeTableMap::COL_ESCOLA, EquipeTableMap::COL_ESCOLA_CURTO, EquipeTableMap::COL_CIDADE, EquipeTableMap::COL_EQUIPE, EquipeTableMap::COL_EQUIPE_CURTO, EquipeTableMap::COL_ESTADO, EquipeTableMap::COL_PRESENTE, EquipeTableMap::COL_DESCLASSIFICADO, ),
+        self::TYPE_FIELDNAME     => array('evento_id', 'equipe_id', 'escola', 'escola_curto', 'cidade', 'equipe', 'equipe_curto', 'estado', 'presente', 'desclassificado', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, )
     );
 
     /**
@@ -141,11 +146,11 @@ class EquipeTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('EventoId' => 0, 'EquipeId' => 1, 'Escola' => 2, 'EscolaCurto' => 3, 'Cidade' => 4, 'Equipe' => 5, 'EquipeCurto' => 6, 'Estado' => 7, 'Presente' => 8, ),
-        self::TYPE_CAMELNAME     => array('eventoId' => 0, 'equipeId' => 1, 'escola' => 2, 'escolaCurto' => 3, 'cidade' => 4, 'equipe' => 5, 'equipeCurto' => 6, 'estado' => 7, 'presente' => 8, ),
-        self::TYPE_COLNAME       => array(EquipeTableMap::COL_EVENTO_ID => 0, EquipeTableMap::COL_EQUIPE_ID => 1, EquipeTableMap::COL_ESCOLA => 2, EquipeTableMap::COL_ESCOLA_CURTO => 3, EquipeTableMap::COL_CIDADE => 4, EquipeTableMap::COL_EQUIPE => 5, EquipeTableMap::COL_EQUIPE_CURTO => 6, EquipeTableMap::COL_ESTADO => 7, EquipeTableMap::COL_PRESENTE => 8, ),
-        self::TYPE_FIELDNAME     => array('evento_id' => 0, 'equipe_id' => 1, 'escola' => 2, 'escola_curto' => 3, 'cidade' => 4, 'equipe' => 5, 'equipe_curto' => 6, 'estado' => 7, 'presente' => 8, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, )
+        self::TYPE_PHPNAME       => array('EventoId' => 0, 'EquipeId' => 1, 'Escola' => 2, 'EscolaCurto' => 3, 'Cidade' => 4, 'Equipe' => 5, 'EquipeCurto' => 6, 'Estado' => 7, 'Presente' => 8, 'Desclassificado' => 9, ),
+        self::TYPE_CAMELNAME     => array('eventoId' => 0, 'equipeId' => 1, 'escola' => 2, 'escolaCurto' => 3, 'cidade' => 4, 'equipe' => 5, 'equipeCurto' => 6, 'estado' => 7, 'presente' => 8, 'desclassificado' => 9, ),
+        self::TYPE_COLNAME       => array(EquipeTableMap::COL_EVENTO_ID => 0, EquipeTableMap::COL_EQUIPE_ID => 1, EquipeTableMap::COL_ESCOLA => 2, EquipeTableMap::COL_ESCOLA_CURTO => 3, EquipeTableMap::COL_CIDADE => 4, EquipeTableMap::COL_EQUIPE => 5, EquipeTableMap::COL_EQUIPE_CURTO => 6, EquipeTableMap::COL_ESTADO => 7, EquipeTableMap::COL_PRESENTE => 8, EquipeTableMap::COL_DESCLASSIFICADO => 9, ),
+        self::TYPE_FIELDNAME     => array('evento_id' => 0, 'equipe_id' => 1, 'escola' => 2, 'escola_curto' => 3, 'cidade' => 4, 'equipe' => 5, 'equipe_curto' => 6, 'estado' => 7, 'presente' => 8, 'desclassificado' => 9, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, )
     );
 
     /**
@@ -174,6 +179,7 @@ class EquipeTableMap extends TableMap
         $this->addColumn('equipe_curto', 'EquipeCurto', 'VARCHAR', true, 100, null);
         $this->addColumn('estado', 'Estado', 'CHAR', false, 2, null);
         $this->addColumn('presente', 'Presente', 'BOOLEAN', true, 1, true);
+        $this->addColumn('desclassificado', 'Desclassificado', 'BOOLEAN', true, 1, false);
     } // initialize()
 
     /**
@@ -449,6 +455,7 @@ class EquipeTableMap extends TableMap
             $criteria->addSelectColumn(EquipeTableMap::COL_EQUIPE_CURTO);
             $criteria->addSelectColumn(EquipeTableMap::COL_ESTADO);
             $criteria->addSelectColumn(EquipeTableMap::COL_PRESENTE);
+            $criteria->addSelectColumn(EquipeTableMap::COL_DESCLASSIFICADO);
         } else {
             $criteria->addSelectColumn($alias . '.evento_id');
             $criteria->addSelectColumn($alias . '.equipe_id');
@@ -459,6 +466,7 @@ class EquipeTableMap extends TableMap
             $criteria->addSelectColumn($alias . '.equipe_curto');
             $criteria->addSelectColumn($alias . '.estado');
             $criteria->addSelectColumn($alias . '.presente');
+            $criteria->addSelectColumn($alias . '.desclassificado');
         }
     }
 

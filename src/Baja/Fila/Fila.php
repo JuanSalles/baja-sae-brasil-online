@@ -174,14 +174,22 @@ class Fila
     static function checkPermissaoFila($usuario, $evento_id, $fila_id, $equipe_id, $check_admin=false) {
         //$permissoes = self::getFilasUsuario($usuario);
         
-        $is_admin = UserQuery::create()->findOneByUsername($usuario)->hasPermission($evento_id.'_FILA_'.$fila_id.'_ADMIN');
+        $usr = UserQuery::create()->findOneByUsername($usuario);
         
-        if ($check_admin && $is_admin) {
-            return true;
-        } elseif ($is_admin) {
-            return true;
-        } else {
-            return UserQuery::create()->findOneByUsername($usuario)->hasPermission($evento_id.'_FILA_'.$fila_id.'_'.$equipe_id); 
+        $is_admin = false;
+        
+        if ($usr) {
+            $is_admin = $usr->hasPermission($evento_id.'_FILA_'.$fila_id.'_ADMIN');
+
+            if ($check_admin && $is_admin) {
+                return true;
+            } elseif ($is_admin) {
+                return true;
+            } else {
+                return UserQuery::create()->findOneByUsername($usuario)->hasPermission($evento_id.'_FILA_'.$fila_id.'_'.$equipe_id); 
+            }
+    
+            return false;
         }
 
         return false;

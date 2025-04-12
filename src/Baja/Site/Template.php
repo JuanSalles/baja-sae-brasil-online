@@ -148,7 +148,7 @@ class Template
                     }
                 }
                 ?>
-                <li><a id="contato" href="contato.php">Contato</a></li>
+                <!--li><a id="contato" href="contato.php">Contato</a></li-->
                 <li><a id="notificacoes" href="notificacoes.php">Notificações</a></li>
                 <li><a id="relogio" href="clock.php">Relógio Oficial</a></li>
                 <li><a id="Arquivo" href="#">Arquivo</a><ul>

@@ -137,6 +137,14 @@ abstract class Equipe implements ActiveRecordInterface
     protected $presente;
 
     /**
+     * The value for the desclassificado field.
+     *
+     * Note: this column has a database default value of: false
+     * @var        boolean
+     */
+    protected $desclassificado;
+
+    /**
      * @var        ChildEvento
      */
     protected $aEvento;
@@ -194,6 +202,7 @@ abstract class Equipe implements ActiveRecordInterface
     public function applyDefaultValues()
     {
         $this->presente = true;
+        $this->desclassificado = false;
     }
 
     /**
@@ -524,6 +533,26 @@ abstract class Equipe implements ActiveRecordInterface
     }
 
     /**
+     * Get the [desclassificado] column value.
+     *
+     * @return boolean
+     */
+    public function getDesclassificado()
+    {
+        return $this->desclassificado;
+    }
+
+    /**
+     * Get the [desclassificado] column value.
+     *
+     * @return boolean
+     */
+    public function isDesclassificado()
+    {
+        return $this->getDesclassificado();
+    }
+
+    /**
      * Set the value of [evento_id] column.
      *
      * @param string $v New value
@@ -716,6 +745,34 @@ abstract class Equipe implements ActiveRecordInterface
     } // setPresente()
 
     /**
+     * Sets the value of the [desclassificado] column.
+     * Non-boolean arguments are converted using the following rules:
+     *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     *
+     * @param  boolean|integer|string $v The new value
+     * @return $this|\Baja\Model\Equipe The current object (for fluent API support)
+     */
+    public function setDesclassificado($v)
+    {
+        if ($v !== null) {
+            if (is_string($v)) {
+                $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+            } else {
+                $v = (boolean) $v;
+            }
+        }
+
+        if ($this->desclassificado !== $v) {
+            $this->desclassificado = $v;
+            $this->modifiedColumns[EquipeTableMap::COL_DESCLASSIFICADO] = true;
+        }
+
+        return $this;
+    } // setDesclassificado()
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -726,6 +783,10 @@ abstract class Equipe implements ActiveRecordInterface
     public function hasOnlyDefaultValues()
     {
             if ($this->presente !== true) {
+                return false;
+            }
+
+            if ($this->desclassificado !== false) {
                 return false;
             }
 
@@ -781,6 +842,9 @@ abstract class Equipe implements ActiveRecordInterface
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : EquipeTableMap::translateFieldName('Presente', TableMap::TYPE_PHPNAME, $indexType)];
             $this->presente = (null !== $col) ? (boolean) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : EquipeTableMap::translateFieldName('Desclassificado', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->desclassificado = (null !== $col) ? (boolean) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -789,7 +853,7 @@ abstract class Equipe implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 9; // 9 = EquipeTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 10; // 10 = EquipeTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\Baja\\Model\\Equipe'), 0, $e);
@@ -1086,6 +1150,9 @@ abstract class Equipe implements ActiveRecordInterface
         if ($this->isColumnModified(EquipeTableMap::COL_PRESENTE)) {
             $modifiedColumns[':p' . $index++]  = 'presente';
         }
+        if ($this->isColumnModified(EquipeTableMap::COL_DESCLASSIFICADO)) {
+            $modifiedColumns[':p' . $index++]  = 'desclassificado';
+        }
 
         $sql = sprintf(
             'INSERT INTO equipe (%s) VALUES (%s)',
@@ -1123,6 +1190,9 @@ abstract class Equipe implements ActiveRecordInterface
                         break;
                     case 'presente':
                         $stmt->bindValue($identifier, (int) $this->presente, PDO::PARAM_INT);
+                        break;
+                    case 'desclassificado':
+                        $stmt->bindValue($identifier, (int) $this->desclassificado, PDO::PARAM_INT);
                         break;
                 }
             }
@@ -1206,6 +1276,9 @@ abstract class Equipe implements ActiveRecordInterface
             case 8:
                 return $this->getPresente();
                 break;
+            case 9:
+                return $this->getDesclassificado();
+                break;
             default:
                 return null;
                 break;
@@ -1245,6 +1318,7 @@ abstract class Equipe implements ActiveRecordInterface
             $keys[6] => $this->getEquipeCurto(),
             $keys[7] => $this->getEstado(),
             $keys[8] => $this->getPresente(),
+            $keys[9] => $this->getDesclassificado(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1373,6 +1447,9 @@ abstract class Equipe implements ActiveRecordInterface
             case 8:
                 $this->setPresente($value);
                 break;
+            case 9:
+                $this->setDesclassificado($value);
+                break;
         } // switch()
 
         return $this;
@@ -1425,6 +1502,9 @@ abstract class Equipe implements ActiveRecordInterface
         }
         if (array_key_exists($keys[8], $arr)) {
             $this->setPresente($arr[$keys[8]]);
+        }
+        if (array_key_exists($keys[9], $arr)) {
+            $this->setDesclassificado($arr[$keys[9]]);
         }
     }
 
@@ -1493,6 +1573,9 @@ abstract class Equipe implements ActiveRecordInterface
         }
         if ($this->isColumnModified(EquipeTableMap::COL_PRESENTE)) {
             $criteria->add(EquipeTableMap::COL_PRESENTE, $this->presente);
+        }
+        if ($this->isColumnModified(EquipeTableMap::COL_DESCLASSIFICADO)) {
+            $criteria->add(EquipeTableMap::COL_DESCLASSIFICADO, $this->desclassificado);
         }
 
         return $criteria;
@@ -1604,6 +1687,7 @@ abstract class Equipe implements ActiveRecordInterface
         $copyObj->setEquipeCurto($this->getEquipeCurto());
         $copyObj->setEstado($this->getEstado());
         $copyObj->setPresente($this->getPresente());
+        $copyObj->setDesclassificado($this->getDesclassificado());
 
         if ($deepCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -2538,6 +2622,7 @@ abstract class Equipe implements ActiveRecordInterface
         $this->equipe_curto = null;
         $this->estado = null;
         $this->presente = null;
+        $this->desclassificado = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->applyDefaultValues();

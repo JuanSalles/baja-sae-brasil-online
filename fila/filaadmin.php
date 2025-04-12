@@ -44,7 +44,7 @@ if (!$permissao) {
 
 try {
     $fila = FilaQuery::create()->filterByEventoId($evento_id)->filterByFilaId((int)$fila_id)->findOne();
-} catch (Exception $e) {
+} catch (\Exception $e) {
     die ('Dados inválidos.');
 }
 

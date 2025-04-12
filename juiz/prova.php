@@ -116,7 +116,9 @@ Template::printHeader("Detalhes de Prova", false);
 
 
 
+
 ?>
+
 <div style="max-width: 1000px; margin: 0 auto; height:100vh;">
 <?php if ($nova) { ?>
     <form action="prova.php?nova=true" method="POST">
@@ -208,10 +210,21 @@ Template::printHeader("Detalhes de Prova", false);
                 <tr>
                     <th style="height: 30px;" colspan="2"><input type="submit" name="act" value="Salvar" />
                 </tr>
+                <?php } 
+
+                    if (isset($prova->getParams()->type) && $prova->getParams()->type == "tournament") {
+                    
+                ?>
+                
+                <tr>
+                    <th style="height: 30px;" colspan="2"><a style="color:white;" href="torneio.php?id=<?= $prova->getProvaId() ?>" target="_blank">Administrar Chaveamento</a></th>
+                </tr>
                 <?php } ?>
             </tfoot>
         </table>
     </form>
+
+    
 
     <script type="text/javascript">
         const atual = <?= $nova?'[]':json_encode($prova->getParams()) ?>;

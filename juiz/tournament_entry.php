@@ -174,7 +174,13 @@ $min_round = TournamentQuery::create()->filterByEventoId($currentEventId)->filte
 if (isset($_REQUEST['round'])) {
     $current_round = (int)$_REQUEST['round'];
 } else {
-    $current_round = TournamentQuery::create()->filterByEventoId($currentEventId)->filterByProvaId($_page)->filterByWinner(null)->orderByRound('desc')->findOne()->getRound();
+    $first_null_winner = TournamentQuery::create()->filterByEventoId($currentEventId)->filterByProvaId($_page)->filterByWinner(null)->orderByRound('desc')->findOne();
+    if ($first_null_winner) {
+        $current_round = $first_null_winner->getRound();
+    } else {
+        $current_round = 0;
+    } 
+
 }
 
 $matches = TournamentQuery::create()->filterByEventoId($currentEventId)->filterByProvaId($_page)->filterByRound($current_round)->find();
